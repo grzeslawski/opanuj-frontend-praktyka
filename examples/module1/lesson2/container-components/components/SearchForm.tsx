@@ -1,10 +1,16 @@
+import Input from "./atoms/Input";
+import Select from "./atoms/Select";
+
+const genderOptions = ['Any Gender', 'Female', 'Male', 'Genderless', 'Unknown'];
+const sortOptions = ['Initial', 'Name', 'Created Date'];
+
 type SearchFormProps = {
   name: string;
-  setName: (name: string) => void;
+  setName: React.Dispatch<React.SetStateAction<string>>;
   gender: string;
-  setGender: (gender: string) => void;
+  setGender: React.Dispatch<React.SetStateAction<string>>;
   sortOption: string;
-  setSortOption: (sortOption: string) => void;
+  setSortOption: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function SearchForm({
@@ -17,42 +23,9 @@ function SearchForm({
 }: SearchFormProps) {
   return (
     <form className="space-x-4 flex items-end justify-center">
-      <label className="flex flex-col">
-        Name
-        <input
-          className="border h-7 mt-1 indent-2"
-          type="text"
-          placeholder="Rick Sanchez..."
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </label>
-      <label className="flex flex-col">
-        Gender
-        <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          className="border h-7 mt-1"
-        >
-          <option value="">Any Gender</option>
-          <option value="female">Female</option>
-          <option value="male">Male</option>
-          <option value="genderless">Genderless</option>
-          <option value="unknown">Unknown</option>
-        </select>
-      </label>
-      <label className="flex flex-col">
-        Sort by
-        <select
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-          className="border h-7 mt-1"
-        >
-          <option value="">Initial</option>
-          <option value="name">Name</option>
-          <option value="created">Created Date</option>
-        </select>
-      </label>
+      <Input label="Name" value={name} setter={(e) => setName(e)} />
+      <Select label="Gender" value={gender} options={genderOptions} setter={(e) => setGender(e)} /> 
+      <Select label="Sort by" value={sortOption} options={sortOptions} setter={(e) => setSortOption(e)} /> 
     </form>
   );
 }
