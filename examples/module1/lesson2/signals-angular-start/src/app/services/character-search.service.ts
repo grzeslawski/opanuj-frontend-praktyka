@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -9,6 +9,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { Character } from '../types/Character';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class CharacterSearchService {
   private charactersSource$: Observable<Character[]> = new Observable<
     Character[]
   >();
-  characters$: Observable<Character[]> = new Observable<Character[]>();
+  characters: Signal<Character[]> = signal([]);
   private nameSubject = new BehaviorSubject<string>('');
   private genderSubject = new BehaviorSubject<string>('');
   private sortOptionSubject = new BehaviorSubject<string>('');
@@ -41,14 +42,14 @@ export class CharacterSearchService {
       })
     );
 
-    this.characters$ = combineLatest([
+    this.characters = toSignal(combineLatest([
       this.charactersSource$,
       this.sortOptionSubject,
     ]).pipe(
       map(([characters, sortOption]) =>
         this.sortCharacters(characters, sortOption)
       )
-    );
+    ), {initialValue: []});
   }
 
   setName(name: string) {
